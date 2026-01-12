@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-const config = {
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -19,6 +19,19 @@ const config = {
       },
     },
     extend: {
+      fontSize: {
+        10: ["10px", { lineHeight: "14px" }],
+        12: ["12px", { lineHeight: "16px" }],
+        14: ["14px", { lineHeight: "20px" }],
+        16: ["16px", { lineHeight: "24px" }],
+        18: ["18px", { lineHeight: "22px" }],
+        20: ["20px", { lineHeight: "24px" }],
+        24: ["24px", { lineHeight: "30px" }],
+        26: ["26px", { lineHeight: "32px" }],
+        30: ["30px", { lineHeight: "38px" }],
+        36: ["36px", { lineHeight: "44px" }],
+      },
+
       colors: {
         fill: {
           1: "rgba(255, 255, 255, 0.10)",
@@ -69,12 +82,14 @@ const config = {
           900: "#101828",
         },
       },
+
       backgroundImage: {
         "bank-gradient": "linear-gradient(90deg, #0179FE 0%, #4893FF 100%)",
         "gradient-mesh": "url('/icons/gradient-mesh.svg')",
         "bank-green-gradient":
           "linear-gradient(90deg, #01797A 0%, #489399 100%)",
       },
+
       boxShadow: {
         form: "0px 1px 2px 0px rgba(16, 24, 40, 0.05)",
         chart:
@@ -83,10 +98,12 @@ const config = {
           "0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03)",
         creditCard: "8px 10px 16px 0px rgba(0, 0, 0, 0.05)",
       },
+
       fontFamily: {
         inter: "var(--font-inter)",
         "ibm-plex-serif": "var(--font-ibm-plex-serif)",
       },
+
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -97,12 +114,14 @@ const config = {
           to: { height: "0" },
         },
       },
+
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
+
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
 
