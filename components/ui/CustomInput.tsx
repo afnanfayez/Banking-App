@@ -1,7 +1,7 @@
 import { Label } from "@radix-ui/react-label"
 import { FormControl, FormField, FormLabel, FormMessage } from "./form"
 import { Input } from "./input"
-import {Control} from 'react-hook-form'
+import {Control, FieldPath} from 'react-hook-form'
 import {z} from 'zod'
 import { authformSchema } from "@/lib/utils"
 
@@ -9,7 +9,7 @@ import { authformSchema } from "@/lib/utils"
 
 interface CustomInput {
   control:Control<z.infer<typeof authformSchema>> ,
-   name :string ,
+   name :FieldPath<z.infer<typeof authformSchema>> ,
    label :string ,
    placeholder :string
 }
@@ -27,6 +27,7 @@ const CustomInput =({control ,name ,label,placeholder}:CustomInput)=>{
                                 <div className="flex w-full flex-col" >
                                 <FormControl >
                                     <Input placeholder={placeholder} className="input-class"
+                                    type ={name==='password' ? 'password' : 'text'}
                                     {...field} />
                                 </FormControl>
                                 <FormMessage className="form-message mt-2" />
