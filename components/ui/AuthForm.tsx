@@ -18,6 +18,8 @@ import {
     FormMessage
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import CustomInput from "./CustomInput";
+import { authformSchema } from "@/lib/utils";
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -26,10 +28,11 @@ const formSchema = z.object({
 const AuthForm = ({ type }: { type: string }) => {
     const [user, setUser] = useState(null);
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<z.infer<typeof authformSchema>>({
+        resolver: zodResolver(authformSchema),
         defaultValues: {
             email: "",
+            password:''
         },
     });
 
@@ -58,47 +61,16 @@ const AuthForm = ({ type }: { type: string }) => {
             <div className="flex flex-col gap-4"></div>
 
         ) : (
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="email"
-                        render={({ field }) => (
-                         <div className='form-item'>
-                            <FormLabel className="form-label">
-                                Email
-                                </FormLabel>
-                                <div className="flex w-full flex-col" >
-                                <FormControl >
-                                    <Input placeholder="Enter your Email" className="input-class"
-                                    {...field} />
-                                </FormControl>
-                                <FormMessage className="form-message mt-2" />
-                                </div>
-                         </div>
-                        )}
-                    />
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-                     <FormField
-                        control={form.control}
-                        name="password"
-                        render={({ field }) => (
-                         <div className='form-item'>
-                            <FormLabel className="form-label">
-                                Password
-                                </FormLabel>
-                                <div className="flex w-full flex-col" >
-                                <FormControl >
-                                    <Input placeholder="Enter your Password" className="input-class" type="password"
-                                    {...field} />
-                                </FormControl>
-                                <FormMessage className="form-message mt-2" />
-                                </div>
-                         </div>
-                        )}
-                    />
-                </form>
-            </Form>
+                        <CustomInput control={form.control} name='email' label='Email' placeholder='Enter Your email' />
+                        <CustomInput control={form.control} name='password' label='Password' placeholder='Enter Your password' />
+
+                    </form>
+
+                    <button type="submit">Submit</button>
+                </Form>
         )}
     </section>;
 };
