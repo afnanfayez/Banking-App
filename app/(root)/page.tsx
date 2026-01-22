@@ -1,6 +1,6 @@
-import RightSidebar from "@/components/RightSidebar";
-import HeaderBox from "@/components/ui/ui/HeaderBox";
-import TotalBalanceBox from "@/components/ui/ui/TotalBalanceBox";
+import RightSidebar from "@/components/ui/RightSidebar";
+import HeaderBox from "@/components/ui/HeaderBox";
+import TotalBalanceBox from "@/components/ui/TotalBalanceBox";
 
 
 const Home = () => {
