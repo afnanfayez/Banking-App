@@ -1,5 +1,5 @@
 import MobileNavBar from "@/components/ui/MobileNavBar";
-import Sidebar from "@/components/ui/Sidebar";
+import Sidebar from "@/components/ui/sidebar";
 import Image from "next/image";
 
 export default function RootLayout({
@@ -8,30 +8,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const loggedIn = {
-    $id: '1',
-    firstName: 'Afnan',
-    lastName: 'Zeiti',
-    email: 'afnanzeiti@gmail.com',
-    userId: '1',
-    dwollaCustomerUrl: '',
-    dwollaCustomerId: '',
-    address1: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    dateOfBirth: '',
-    ssn: ''
-  }
-  return (<main className="flex h-screen w-full font-inter">
-    <Sidebar user={loggedIn} />
+    $id: "1",
+    firstName: "Afnan",
+    lastName: "Zeiti",
+    email: "afnanzeiti@gmail.com",
+    userId: "1",
+    dwollaCustomerUrl: "",
+    dwollaCustomerId: "",
+    address1: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    dateOfBirth: "",
+    ssn: "",
+  };
+  return (
+    <main className="flex h-screen w-full font-inter">
+      <Sidebar user={loggedIn} />
 
-    <div className="flex size-full flex-col">
-      <div className='root-layout'>
-        <Image src='/icons/logo.svg' width={30} height={30} alt='Logo' />
-        <MobileNavBar user={loggedIn} />
+      <div className="flex size-full flex-col">
+        <div className="root-layout">
+          <Image src="/icons/logo.svg" width={30} height={30} alt="Logo" />
+          <MobileNavBar user={loggedIn} />
+        </div>
+        {children}
       </div>
-      {children}
-    </div>
-  </main>
+    </main>
   );
 }
