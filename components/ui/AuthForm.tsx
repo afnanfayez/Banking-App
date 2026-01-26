@@ -13,6 +13,7 @@ import CustomInput from "./CustomInput";
 import { authformSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -42,8 +43,27 @@ const AuthForm = ({ type }: { type: string }) => {
     setIsLoading(true);
     try {
       if (type === "sign-up") {
-        // const newUser = await signUp(data);
-        console.log("Sign up data:", data);
+        const newUser = await signUp(data);
+        setUser(newUser);
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          address1: data.address!,
+          city: data.city!,
+          state: data.state!,
+          postalCode: data.postalCode!,
+          dateOfBirth: data.dateOfBirth!,
+          ssn: data.ssn!,
+          email: data.email,
+          password: data.password,
+        };
+
+        if (newUser) {
+          setUser(newUser);
+          console.log("User state updated");
+        } else {
+          console.error("Sign up returned undefined");
+        }
       }
       if (type === "sign-in") {
         // const response = await signIn({
@@ -51,7 +71,6 @@ const AuthForm = ({ type }: { type: string }) => {
         //   password: data.password,
         // });
         // if (response) router.push("/");
-        console.log("Sign in data:", data);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,7 +101,11 @@ const AuthForm = ({ type }: { type: string }) => {
       </header>
 
       {user ? (
-        <div className="flex flex-col gap-4"></div>
+        <div className="flex flex-col gap-4">
+          <p className="text-16 font-normal text-gray-600">
+            Account successfully created! You can now link your bank account.
+          </p>
+        </div>
       ) : (
         <>
           <Form {...form}>
