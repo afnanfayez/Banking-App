@@ -4,7 +4,6 @@ import { ID } from "node-appwrite";
 import { createAdminClient, createSessionClient } from "../server/appwrite";
 import { cookies } from "next/headers";
 import { parseStringify } from "../utils";
-import { set } from "react-hook-form";
 
 export const signIn = async ({ email, password }: signInProps) => {
   try {
@@ -54,8 +53,10 @@ export const signUp = async (userData: SignUpParams) => {
 export async function getLoggedInUser() {
   try {
     const { account } = await createSessionClient();
-    return await account.get();
+    const user = await account.get();
+    return parseStringify(user);
   } catch (error) {
+    console.error('Error getting logged in user:', error);
     return null;
   }
 }
