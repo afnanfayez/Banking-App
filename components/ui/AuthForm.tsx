@@ -13,11 +13,13 @@ import CustomInput from "./CustomInput";
 import { authformSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { signIn, signUp } from "@/lib/actions/user.actions";
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
 
   const formSchema = authformSchema(type);
 
@@ -42,16 +44,22 @@ const AuthForm = ({ type }: { type: string }) => {
     setIsLoading(true);
     try {
       if (type === "sign-up") {
-        // const newUser = await signUp(data);
-        console.log("Sign up data:", data);
+        const newUser = await signUp(data);
+        setUser(newUser);
+
+        if (newUser) {
+          setUser(newUser);
+          console.log("User state updated");
+        } else {
+          console.error("Sign up returned undefined");
+        }
       }
       if (type === "sign-in") {
-        // const response = await signIn({
-        //   email: data.email,
-        //   password: data.password,
-        // });
-        // if (response) router.push("/");
-        console.log("Sign in data:", data);
+        const response = await signIn({
+          email: data.email,
+          password: data.password,
+        });
+        if (response) router.push("/");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,7 +90,9 @@ const AuthForm = ({ type }: { type: string }) => {
       </header>
 
       {user ? (
-        <div className="flex flex-col gap-4"></div>
+        <div className="flex flex-col gap-4">
+
+        </div>
       ) : (
         <>
           <Form {...form}>
