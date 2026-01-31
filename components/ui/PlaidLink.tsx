@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Button } from "./button";
 import { StyledString } from "next/dist/build/swc/types";
 import { useRouter } from "next/navigation";
-import { PlaidLinkOnSuccess, usePlaidLink } from 'react-plaid-link'
+import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-link'
 import { createLinkToken } from "@/lib/actions/user.actions";
 
 const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
