@@ -217,11 +217,20 @@ export const authformSchema = (type: string) =>
     state:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(1, { message: "Required" }).max(2),
+        : z
+          .string()
+          .min(2, { message: "State must be 2 letters (e.g., NY, CA)" })
+          .max(2, { message: "State must be 2 letters (e.g., NY, CA)" })
+          .regex(/^[A-Za-z]{2}$/, { message: "State must be 2 letters only" })
+          .transform((val) => val.toUpperCase()),
     postalCode:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(1, { message: "Required" }).max(6),
+        : z
+          .string()
+          .min(5, { message: "Postal code must be 5 digits" })
+          .max(5, { message: "Postal code must be 5 digits" })
+          .regex(/^\d{5}$/, { message: "Postal code must be 5 digits only" }),
     dateOfBirth:
       type === "sign-in"
         ? z.string().optional()
@@ -229,7 +238,10 @@ export const authformSchema = (type: string) =>
     ssn:
       type === "sign-in"
         ? z.string().optional()
-        : z.string().min(1, { message: "Required" }),
+        : z
+          .string()
+          .min(4, { message: "SSN must be at least 4 digits" })
+          .regex(/^\d{4,}$/, { message: "SSN must contain only digits" }),
     //both
     email: z.string().email("Invalid email"),
     password: z

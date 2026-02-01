@@ -30,7 +30,7 @@ declare type User = {
   email: string;
   userId: string;
   dwollaCustomerUrl: string;
-  dwollaCustomerId: string;
+  dwollaCustomerld: string;
   firstName: string;
   lastName: string;
   name: string;
@@ -119,7 +119,7 @@ declare type TransferParams = {
 };
 
 declare type AddFundingSourceParams = {
-  dwollaCustomerId: string;
+  dwollaCustomerld: string;
   processorToken: string;
   bankName: string;
 };
@@ -176,7 +176,7 @@ declare interface PaginationProps {
 declare interface PlaidLinkProps {
   user: User;
   variant: "primary" | "ghost";
-  dwollaCustomerId: string;
+  dwollaCustomerld?: string;
 }
 
 // declare type User = sdk.Models.Document & {

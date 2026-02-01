@@ -20,6 +20,7 @@ const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const formSchema = authformSchema(type);
 
@@ -42,6 +43,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       const userData = {
         firstName: data.firstName!,
@@ -75,6 +77,9 @@ const AuthForm = ({ type }: { type: string }) => {
       }
     } catch (error) {
       console.error("Error:", error);
+      setErrorMessage(
+        error instanceof Error ? error.message : "Something went wrong",
+      );
     } finally {
       setIsLoading(false);
     }
@@ -192,6 +197,11 @@ const AuthForm = ({ type }: { type: string }) => {
                     "Sign Up"
                   )}
                 </Button>
+                {errorMessage && (
+                  <p className="text-14 font-normal text-red-600">
+                    {errorMessage}
+                  </p>
+                )}
               </div>
             </form>
           </Form>
