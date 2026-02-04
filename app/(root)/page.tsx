@@ -13,12 +13,16 @@ const Home = async ({ searchParams }: SearchParamProps) => {
     userId: loggedIn.$id
   })
 
-  // if (!accounts) return;
+ if (!accounts) return;
 
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData?.[0]?.appwriteItemId;
 
   const account = await getAccount({ appwriteItemId })
+  console.log({
+    account,
+    accountsData
+  })
 
   // if (!account) return;
 
