@@ -251,7 +251,7 @@
   }
 
   .banktab-item {
-    @apply gap-[18px] border-b-2 flex px-2 sm:px-4 py-2 transition-all;
+    @apply gap-[18px] flex px-2 sm:px-4 py-2 transition-all;
   }
 
   /* Mobile nav */
@@ -273,7 +273,7 @@
   }
 
   .plaidlink-default {
-    @apply flex !justify-start cursor-pointer gap-3 rounded-lg !bg-transparent flex-row;
+    @apply flex justify-start cursor-pointer gap-3 rounded-lg bg-transparent flex-row;
   }
 
   /* Auth */
