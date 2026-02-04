@@ -1,4 +1,5 @@
 import HeaderBox from '@/components/ui/HeaderBox'
+import RecentTransactions from '@/components/ui/RecentTransactions';
 // import RecentTransactions from '@/components/ui/RecentTransactions'; // Note: File might be missing
 import RightSidebar from '@/components/ui/RightSidebar';
 import TotalBalanceBox from '@/components/ui/TotalBalanceBox';
@@ -44,12 +45,12 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           />
         </header>
 
-        {/* <RecentTransactions
+        <RecentTransactions
           accounts={accountsData}
           transactions={account?.transactions}
           appwriteItemId={appwriteItemId}
           page={currentPage}
-        /> */}
+        />
       </div>
 
       <RightSidebar
