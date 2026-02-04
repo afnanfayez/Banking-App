@@ -23,6 +23,7 @@ const dwollaClient = new Client({
   secret: process.env.DWOLLA_SECRET as string,
 });
 
+// Create a Dwolla Funding Source using a Plaid Processor Token
 export const createFundingSource = async (
   options: CreateFundingSourceOptions
 ) => {
@@ -54,16 +55,11 @@ export const createDwollaCustomer = async (
   newCustomer: NewDwollaCustomerParams
 ) => {
   try {
-    const response = await dwollaClient.post("customers", newCustomer);
-    const location = response.headers.get("location");
-
-    if (!location) {
-      throw new Error("Dwolla API did not return customer URL.");
-    }
-
-    return location;
-  } catch (err: any) {
-    console.error("Creating a Dwolla Customer Failed:", err);
+    return await dwollaClient
+      .post("customers", newCustomer)
+      .then((res) => res.headers.get("location"));
+  } catch (err) {
+    console.error("Creating a Dwolla Customer Failed: ", err);
     throw err;
   }
 };
@@ -95,14 +91,17 @@ export const createTransfer = async ({
     console.error("Transfer fund failed: ", err);
   }
 };
+
 export const addFundingSource = async ({
   dwollaCustomerld,
   processorToken,
   bankName,
 }: AddFundingSourceParams) => {
   try {
+    // create dwolla auth link
     const dwollaAuthLinks = await createOnDemandAuthorization();
 
+    // add funding source to the dwolla customer & get the funding source url
     const fundingSourceOptions = {
       customerId: dwollaCustomerld,
       fundingSourceName: bankName,

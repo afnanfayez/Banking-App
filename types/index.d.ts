@@ -2,7 +2,7 @@
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 // ========================================
@@ -10,7 +10,7 @@ declare type SearchParamProps = {
 declare type SignUpParams = {
   firstName: string;
   lastName: string;
-  address1: string;
+  address: string;
   city: string;
   state: string;
   postalCode: string;
@@ -34,7 +34,7 @@ declare type User = {
   firstName: string;
   lastName: string;
   name: string;
-  address1: string;
+  address: string;
   city: string;
   state: string;
   postalCode: string;
@@ -211,7 +211,7 @@ declare interface TotalBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
-  type: "desktop" | "mobile";
+  type?: "desktop" | "mobile";
 }
 
 declare interface RightSidebarProps {
