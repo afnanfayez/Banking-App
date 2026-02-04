@@ -269,11 +269,19 @@
   }
 
   .plaidlink-ghost {
-    @apply flex cursor-pointer items-center justify-center gap-3 rounded-lg px-3 py-7 hover:bg-white lg:justify-start;
+    @apply flex cursor-pointer items-center justify-center gap-3 rounded-lg px-3 py-7 lg:justify-start;
+  }
+
+  .plaidlink-ghost:hover {
+    background-color: transparent !important;
   }
 
   .plaidlink-default {
     @apply flex justify-start cursor-pointer gap-3 rounded-lg bg-transparent flex-row;
+  }
+
+  .plaidlink-default:hover {
+    background-color: transparent !important;
   }
 
   /* Auth */

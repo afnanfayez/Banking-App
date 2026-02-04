@@ -12,7 +12,7 @@ const getEnvironment = (): "production" | "sandbox" => {
       return "production";
     default:
       throw new Error(
-        "Dwolla environment should either be set to `sandbox` or `production`"
+        "Dwolla environment should either be set to `sandbox` or `production`",
       );
   }
 };
@@ -25,7 +25,7 @@ const dwollaClient = new Client({
 
 // Create a Dwolla Funding Source using a Plaid Processor Token
 export const createFundingSource = async (
-  options: CreateFundingSourceOptions
+  options: CreateFundingSourceOptions,
 ) => {
   try {
     return await dwollaClient
@@ -42,7 +42,7 @@ export const createFundingSource = async (
 export const createOnDemandAuthorization = async () => {
   try {
     const onDemandAuthorization = await dwollaClient.post(
-      "on-demand-authorizations"
+      "on-demand-authorizations",
     );
     const authLink = onDemandAuthorization.body._links;
     return authLink;
@@ -52,14 +52,43 @@ export const createOnDemandAuthorization = async () => {
 };
 
 export const createDwollaCustomer = async (
-  newCustomer: NewDwollaCustomerParams
+  newCustomer: NewDwollaCustomerParams,
 ) => {
   try {
-    return await dwollaClient
-      .post("customers", newCustomer)
-      .then((res) => res.headers.get("location"));
-  } catch (err) {
-    console.error("Creating a Dwolla Customer Failed: ", err);
+    console.log("Creating Dwolla customer with data:", {
+      ...newCustomer,
+      ssn: newCustomer.ssn ? "***" + newCustomer.ssn.slice(-4) : "missing",
+    });
+
+    const response = await dwollaClient.post("customers", newCustomer);
+    const location = response.headers.get("location");
+
+    console.log("Dwolla API response status:", response.status);
+    console.log("Dwolla customer location:", location);
+
+    if (!location) {
+      console.error("Dwolla API did not return a location header");
+      console.error("Full response:", response);
+      throw new Error(
+        "Dwolla API did not return customer URL. Please check your Dwolla credentials.",
+      );
+    }
+
+    return location;
+  } catch (err: any) {
+    console.error("Creating a Dwolla Customer Failed");
+    console.error("Error details:", {
+      message: err.message,
+      code: err.code,
+      statusCode: err.statusCode,
+      body: err.body,
+    });
+
+    // Log validation errors if they exist
+    if (err.body && err.body._embedded && err.body._embedded.errors) {
+      console.error("Dwolla validation errors:", err.body._embedded.errors);
+    }
+
     throw err;
   }
 };
@@ -93,7 +122,7 @@ export const createTransfer = async ({
 };
 
 export const addFundingSource = async ({
-  dwollaCustomerld,
+  dwollaCustomerId,
   processorToken,
   bankName,
 }: AddFundingSourceParams) => {
@@ -103,7 +132,7 @@ export const addFundingSource = async ({
 
     // add funding source to the dwolla customer & get the funding source url
     const fundingSourceOptions = {
-      customerId: dwollaCustomerld,
+      customerId: dwollaCustomerId,
       fundingSourceName: bankName,
       plaidToken: processorToken,
       _links: dwollaAuthLinks,

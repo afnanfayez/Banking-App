@@ -1,29 +1,28 @@
-import HeaderBox from '@/components/ui/HeaderBox'
-import RecentTransactions from '@/components/ui/RecentTransactions';
-// import RecentTransactions from '@/components/ui/RecentTransactions'; // Note: File might be missing
-import RightSidebar from '@/components/ui/RightSidebar';
-import TotalBalanceBox from '@/components/ui/TotalBalanceBox';
-import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
-import { getLoggedInUser } from '@/lib/actions/user.actions';
+import HeaderBox from "@/components/ui/HeaderBox";
+import RecentTransactions from "@/components/ui/RecentTransactions";
+import RightSidebar from "@/components/ui/RightSidebar";
+import TotalBalanceBox from "@/components/ui/TotalBalanceBox";
+import { getAccount, getAccounts } from "@/lib/actions/bank.actions";
+import { getLoggedInUser } from "@/lib/actions/user.actions";
 
 const Home = async ({ searchParams }: SearchParamProps) => {
   const { id, page } = await searchParams;
   const currentPage = Number(page as string) || 1;
   const loggedIn = await getLoggedInUser();
   const accounts = await getAccounts({
-    userId: loggedIn.$id
-  })
+    userId: loggedIn.$id,
+  });
 
- if (!accounts) return;
+  if (!accounts) return;
 
   const accountsData = accounts?.data;
   const appwriteItemId = (id as string) || accountsData?.[0]?.appwriteItemId;
 
-  const account = await getAccount({ appwriteItemId })
+  const account = await getAccount({ appwriteItemId });
   console.log({
     account,
-    accountsData
-  })
+    accountsData,
+  });
 
   // if (!account) return;
 
@@ -34,7 +33,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
           <HeaderBox
             type="greeting"
             title="Welcome"
-            user={loggedIn?.firstName || 'Guest'}
+            user={loggedIn?.firstName || "Guest"}
             subtext="Access and manage your account and transactions efficiently."
           />
 
@@ -59,7 +58,7 @@ const Home = async ({ searchParams }: SearchParamProps) => {
         banks={accountsData?.slice(0, 2)}
       />
     </section>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

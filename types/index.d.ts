@@ -2,7 +2,7 @@
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 };
 
 // ========================================
@@ -10,7 +10,7 @@ declare type SearchParamProps = {
 declare type SignUpParams = {
   firstName: string;
   lastName: string;
-  address: string;
+  address1: string;
   city: string;
   state: string;
   postalCode: string;
@@ -30,11 +30,11 @@ declare type User = {
   email: string;
   userId: string;
   dwollaCustomerUrl: string;
-  dwollaCustomerld: string;
+  dwollaCustomerId: string;
   firstName: string;
   lastName: string;
   name: string;
-  address: string;
+  address1: string;
   city: string;
   state: string;
   postalCode: string;
@@ -119,7 +119,7 @@ declare type TransferParams = {
 };
 
 declare type AddFundingSourceParams = {
-  dwollaCustomerld: string;
+  dwollaCustomerId: string;
   processorToken: string;
   bankName: string;
 };
@@ -176,7 +176,7 @@ declare interface PaginationProps {
 declare interface PlaidLinkProps {
   user: User;
   variant: "primary" | "ghost";
-  dwollaCustomerld?: string;
+  dwollaCustomerId?: string;
 }
 
 // declare type User = sdk.Models.Document & {
@@ -211,7 +211,7 @@ declare interface TotalBalanceBoxProps {
 
 declare interface FooterProps {
   user: User;
-  type?: "desktop" | "mobile";
+  type: "desktop" | "mobile";
 }
 
 declare interface RightSidebarProps {
