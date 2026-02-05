@@ -36,6 +36,7 @@ export const createFundingSource = async (
       .then((res) => res.headers.get("location"));
   } catch (err) {
     console.error("Creating a Funding Source Failed: ", err);
+    throw err;
   }
 };
 
@@ -48,6 +49,7 @@ export const createOnDemandAuthorization = async () => {
     return authLink;
   } catch (err) {
     console.error("Creating an On Demand Authorization Failed: ", err);
+    throw err;
   }
 };
 
@@ -138,7 +140,12 @@ export const addFundingSource = async ({
       _links: dwollaAuthLinks,
     };
     return await createFundingSource(fundingSourceOptions);
-  } catch (err) {
-    console.error("Transfer fund failed: ", err);
+  } catch (err: any) {
+    if (err.body?.code === 'DuplicateResource') {
+      console.log("DWOLLA_DEBUG: Funding source already exists. Using existing resource.");
+      return err.body._links.about.href;
+    }
+    console.error("Adding funding source failed: ", err);
+    throw err;
   }
 };

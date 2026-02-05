@@ -41,7 +41,7 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
             </TableHeader>
             <TableBody>
                 {transactions.map((t: Transaction) => {
-                    const status = getTransactionStatus(new Date(t.date))
+                    const status = getTransactionStatus(new Date(t.date || (t as any).$createdAt))
                     const amount = formatAmount(t.amount)
 
                     const isDebit = t.type === 'debit';

@@ -22,7 +22,14 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
     useEffect(() => {
         const getLinkToken = async () => {
+            console.log("PLAID_DEBUG: Requesting link token for user:", user);
             const data = await createLinkToken(user);
+            console.log("PLAID_DEBUG: Received link token data:", data);
+
+            if (data?.error) {
+                console.error("PLAID_DEBUG: Error from createLinkToken:", data.error);
+                alert(`Plaid Error: ${data.error}`);
+            }
 
             setToken(data?.linkToken);
         }
@@ -31,12 +38,18 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
     }, [user]);
 
     const onSuccess = useCallback<PlaidLinkOnSuccess>(async (public_token: string) => {
-        await exchangePublicToken({
+        const data = await exchangePublicToken({
             publicToken: public_token,
             user,
         })
 
-        router.push('/');
+        if (data?.error) {
+            console.error("Failed to connect bank:", data.error);
+            alert(data.error);
+            return;
+        }
+
+        window.location.href = "/";
     }, [user])
 
     const config: PlaidLinkOptions = {

@@ -38,13 +38,19 @@ export const getTransactionsByBankId = async ({ bankId }: getTransactionsByBankI
             DATABASE_ID!,
             TRANSACTION_COLLECTION_ID!,
             [Query.equal('senderBankId', bankId)],
-        )
+        ).catch(err => {
+            console.warn("WARNING: Failed to fetch sender transactions (check 'senderBankId' attribute/index):", err.message);
+            return { total: 0, documents: [] };
+        });
 
         const receiverTransactions = await database.listDocuments(
             DATABASE_ID!,
             TRANSACTION_COLLECTION_ID!,
             [Query.equal('receiverBankId', bankId)],
-        );
+        ).catch(err => {
+            console.warn("WARNING: Failed to fetch receiver transactions (check 'receiverBankId' attribute/index):", err.message);
+            return { total: 0, documents: [] };
+        });
 
         const transactions = {
             total: senderTransactions.total + receiverTransactions.total,
