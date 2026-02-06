@@ -164,11 +164,13 @@ export function countTransactionCategories(
 }
 
 export function extractCustomerIdFromUrl(url: string) {
+  if (!url) return "";
   // Split the URL string by '/'
   const parts = url.split("/");
 
   // Extract the last part, which represents the customer ID
-  const customerId = parts[parts.length - 1];
+  // If the last part is empty (due to trailing slash), take the one before it
+  const customerId = parts[parts.length - 1] || parts[parts.length - 2];
 
   return customerId;
 }

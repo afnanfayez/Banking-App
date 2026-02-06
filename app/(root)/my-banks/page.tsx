@@ -1,9 +1,8 @@
+import BankCard from '@/components/ui/BankCard';
 import HeaderBox from '@/components/ui/HeaderBox'
-import BankCard from '@/components/ui/BankCard'
-import { getAccounts } from '@/lib/actions/bank.actions'
-import { getLoggedInUser } from '@/lib/actions/user.actions'
-import PlaidLink from '@/components/ui/PlaidLink'
-import React from 'react'
+import { getAccounts } from '@/lib/actions/bank.actions';
+import { getLoggedInUser } from '@/lib/actions/user.actions';
+
 
 const MyBanks = async () => {
     const loggedIn = await getLoggedInUser();
@@ -14,18 +13,9 @@ const MyBanks = async () => {
     return (
         <section className='flex'>
             <div className="my-banks">
-                <header className='my-banks-header'>
-                    <div className='flex flex-row justify-between'>
-                        <HeaderBox
-                            title="My Bank Accounts"
-                            subtext="Effortlessly manage your banking activities."
-                            user={loggedIn?.firstName}
-                            type="title"
-                        />
-
-                        <PlaidLink user={loggedIn} variant="primary" />
-                    </div>
-                </header>
+                <HeaderBox
+                    title="My Bank Accounts"
+                    subtext="Effortlessly manage your banking activites." type={'title'} user={''}                />
 
                 <div className="space-y-4">
                     <h2 className="header-2">

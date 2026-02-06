@@ -49,7 +49,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
         };
 
         return account;
-      }) || []
+      }) || [],
     );
 
     const totalBanks = accounts.length;
@@ -83,8 +83,8 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       bankId: bank.$id,
     });
 
-    const transferTransactions = transferTransactionsData?.documents?.map(
-      (transferData: Transaction) => ({
+    const transferTransactions =
+      transferTransactionsData?.documents?.map((transferData: Transaction) => ({
         id: transferData.$id,
         name: transferData.name!,
         amount: transferData.amount!,
@@ -92,15 +92,13 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
         paymentChannel: transferData.channel,
         category: transferData.category,
         type: transferData.senderBankId === bank.$id ? "debit" : "credit",
-      })
-    ) || [];
+      })) || [];
 
     // get institution info from plaid
     const institution = await getInstitution({
       institutionId: accountsResponse.data.item.institution_id!,
     });
 
-    console.log(`PLAID_DEBUG: Fetching transactions for bank ID: ${bank.$id}, token status: ${bank.accessToken ? 'Present' : 'MISSING'}`);
     const transactions = await getTransactions({
       accessToken: bank?.accessToken,
     });
@@ -120,7 +118,7 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
     // sort transactions by date such that the most recent transaction is first
     const allTransactions = [...transactions, ...transferTransactions].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
     );
 
     return parseStringify({
@@ -187,44 +185,23 @@ export const getTransactions = async ({
 
       transactions = [...transactions, ...newTransactions];
 
-      // Update cursor for the next iteration - using next_cursor as per Plaid standard
-      cursor = data.next_cursor;
-      hasMore = data.has_more;
+      // Update cursor for the next iteration
+      cursor = data.next_cursor ?? (data as any).cursor;
+      hasMore = Boolean(data.has_more);
     }
-
-    console.log(`PLAID_DEBUG: Successfully synced ${transactions.length} transactions.`);
 
     if (transactions.length === 0) {
-      console.log("DEBUG: No transactions found for this account. Note: Sandbox transactions might take a moment to appear. Try using username 'user_good' and password 'pass_good'.");
+      console.log(
+        "DEBUG: No transactions found for this account. Note: Sandbox transactions might take a moment to appear. Try using username 'user_good' and password 'pass_good'.",
+      );
     }
-
-    console.log("Final Transactions to be returned:", transactions.length);
 
     return parseStringify(transactions);
   } catch (error: any) {
-    // Check for specific Plaid errors first to avoid scary console logs
-    if (error.response?.data?.error_code === "PRODUCTS_NOT_SUPPORTED_BY_ITEM") {
-      console.error("PLAID_ERROR: This bank account was linked without transaction support. Please re-link the account.");
-      return [];
-    }
-
-    if (error.response?.data) {
-      const errorCode = error.response.data.error_code;
-      if (errorCode === 'ADDITIONAL_CONSENT_REQUIRED' || errorCode === 'ITEM_LOGIN_REQUIRED') {
-        console.warn(`PLAID_WARNING: [${errorCode}] Access missing for this account. User needs to re-link to gain 'transactions' verification.`);
-        return [];
-      }
-    }
-
-    // Generic error logging for unexpected issues
-    console.error("An error occurred while getting the transactions:", error.message || error);
-    if (error.response) {
-      console.error("PLAID_DEBUG: Raw Error Response Data:", JSON.stringify(error.response.data, null, 2));
-      console.error("PLAID_DEBUG: Status Code:", error.response.status);
-    } else {
-      console.error("PLAID_DEBUG: Error (No Response Object):", error);
-    }
-
+    console.error(
+      "An error occurred while getting the transactions:",
+      error.message || error,
+    );
     return [];
   }
 };

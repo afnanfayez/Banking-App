@@ -22,16 +22,13 @@ const PlaidLink = ({ user, variant }: PlaidLinkProps) => {
 
     useEffect(() => {
         const getLinkToken = async () => {
-            console.log("PLAID_DEBUG: Requesting link token for user:", user);
-            const data = await createLinkToken(user);
-            console.log("PLAID_DEBUG: Received link token data:", data);
-
-            if (data?.error) {
-                console.error("PLAID_DEBUG: Error from createLinkToken:", data.error);
-                alert(`Plaid Error: ${data.error}`);
+            try {
+                const data = await createLinkToken(user);
+                setToken(data?.linkToken);
+            } catch (error: any) {
+                console.error("PLAID_DEBUG: Error getting link token:", error);
+                alert(`Plaid Link Error: ${error?.message || "Unknown error"}`);
             }
-
-            setToken(data?.linkToken);
         }
 
         getLinkToken();
