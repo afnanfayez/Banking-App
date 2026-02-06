@@ -378,10 +378,11 @@ export const getBanks = async ({ userId }: getBanksProps) => {
           [Query.equal("userId", userId)],
         );
         break;
-      } catch (error) {
+      } catch (error: any) {
+        console.error(`Error fetching banks (retry ${4 - retries}):`, error.message);
         retries--;
         if (retries === 0) throw error;
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 
