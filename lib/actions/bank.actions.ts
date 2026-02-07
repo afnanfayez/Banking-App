@@ -82,10 +82,12 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
     if (!bank) return null;
 
-    // get account info from plaid
-    const accountsResponse = await plaidClient.accountsGet({
-      access_token: bank.accessToken,
-    });
+    // Parallelize getting bank info, account info, and transactions
+    const [accountsResponse, transferTransactionsData, transactions] = await Promise.all([
+      plaidClient.accountsGet({ access_token: bank.accessToken }),
+      getTransactionsByBankId({ bankId: bank.$id }),
+      getTransactions({ accessToken: bank?.accessToken }),
+    ]);
 
     const accountData = accountsResponse.data.accounts.find(
       (account: any) => account.account_id === bank.accountId
@@ -93,9 +95,9 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
 
     if (!accountData) return null;
 
-    // get transfer transactions from appwrite
-    const transferTransactionsData = await getTransactionsByBankId({
-      bankId: bank.$id,
+    // get institution info from plaid
+    const institution = await getInstitution({
+      institutionId: accountsResponse.data.item.institution_id!,
     });
 
     const transferTransactions =
@@ -109,15 +111,6 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
         type: transferData.senderBankId === bank.$id ? "debit" : "credit",
         accountId: bank.accountId,
       })) || [];
-
-    // get institution info from plaid
-    const institution = await getInstitution({
-      institutionId: accountsResponse.data.item.institution_id!,
-    });
-
-    const transactions = await getTransactions({
-      accessToken: bank?.accessToken,
-    });
 
     const account = {
       id: accountData.account_id,

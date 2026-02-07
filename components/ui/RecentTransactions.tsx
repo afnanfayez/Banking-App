@@ -54,21 +54,25 @@ const RecentTransactions = ({
                         key={account.id}
                         className="space-y-4"
                     >
-                        <BankInfo
-                            account={account}
-                            appwriteItemId={appwriteItemId}
-                            type="full"
-                        />
+                        {appwriteItemId === account.appwriteItemId && (
+                            <>
+                                <BankInfo
+                                    account={account}
+                                    appwriteItemId={appwriteItemId}
+                                    type="full"
+                                />
 
-                        <TransactionsTable transactions={currentTransactions} />
-{totalPages > 1 && (
-              <div className="my-4 w-full">
-                <Pagination totalPages={totalPages} page={page} />
-              </div>
-            )}
+                                <TransactionsTable transactions={currentTransactions} />
+                                {totalPages > 1 && (
+                                    <div className="my-4 w-full">
+                                        <Pagination totalPages={totalPages} page={page} />
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </TabsContent>
                 ))}
-                
+
 
             </Tabs>
         </section>
