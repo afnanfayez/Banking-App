@@ -3,6 +3,8 @@ import HeaderBox from '@/components/ui/HeaderBox'
 import { getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
 
+export const dynamic = 'force-dynamic';
+
 
 const MyBanks = async () => {
     const loggedIn = await getLoggedInUser();
@@ -15,7 +17,7 @@ const MyBanks = async () => {
             <div className="my-banks">
                 <HeaderBox
                     title="My Bank Accounts"
-                    subtext="Effortlessly manage your banking activites." type={'title'} user={''}                />
+                    subtext="Effortlessly manage your banking activites." type={'title'} user={''} />
 
                 <div className="space-y-4">
                     <h2 className="header-2">

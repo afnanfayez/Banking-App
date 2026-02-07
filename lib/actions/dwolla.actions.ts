@@ -5,15 +5,19 @@ import { Client } from "dwolla-v2";
 const getEnvironment = (): "production" | "sandbox" => {
   const environment = process.env.DWOLLA_ENV as string;
 
+  if (!environment) {
+    console.warn("DWOLLA_ENV is not set. Defaulting to 'sandbox' for build-time safety.");
+    return "sandbox";
+  }
+
   switch (environment) {
     case "sandbox":
       return "sandbox";
     case "production":
       return "production";
     default:
-      throw new Error(
-        "Dwolla environment should either be set to `sandbox` or `production`",
-      );
+      console.warn(`Invalid DWOLLA_ENV: ${environment}. Defaulting to 'sandbox'.`);
+      return "sandbox";
   }
 };
 
