@@ -76,6 +76,32 @@ export const topCategoryStyles = {
     },
     icon: "/icons/coins.svg",
   },
+  Transfer: {
+    bg: "bg-red-25",
+    circleBg: "bg-red-100",
+    text: {
+      main: "text-red-900",
+      count: "text-red-700",
+    },
+    progress: {
+      bg: "bg-red-100",
+      indicator: "bg-red-700",
+    },
+    icon: "/icons/shopping-bag.svg",
+  },
+  Payment: {
+    bg: "bg-success-25",
+    circleBg: "bg-success-100",
+    text: {
+      main: "text-success-900",
+      count: "text-success-700",
+    },
+    progress: {
+      bg: "bg-success-100",
+      indicator: "bg-success-700",
+    },
+    icon: "/icons/shopping-bag.svg",
+  },
   default: {
     bg: "bg-pink-25",
     circleBg: "bg-pink-100",
@@ -96,25 +122,25 @@ export const transactionCategoryStyles = {
     borderColor: "border-pink-600",
     backgroundColor: "bg-pink-500",
     textColor: "text-pink-700",
-    chipBackgroundColor: "bg-inherit",
+    chipBackgroundColor: "bg-pink-25",
   },
   Payment: {
     borderColor: "border-success-600",
     backgroundColor: "bg-green-600",
     textColor: "text-success-700",
-    chipBackgroundColor: "bg-inherit",
+    chipBackgroundColor: "bg-success-25",
   },
   "Bank Fees": {
     borderColor: "border-success-600",
     backgroundColor: "bg-green-600",
     textColor: "text-success-700",
-    chipBackgroundColor: "bg-inherit",
+    chipBackgroundColor: "bg-success-25",
   },
   Transfer: {
     borderColor: "border-red-700",
     backgroundColor: "bg-red-700",
     textColor: "text-red-700",
-    chipBackgroundColor: "bg-inherit",
+    chipBackgroundColor: "bg-red-25",
   },
   Processing: {
     borderColor: "border-[#F2F4F7]",
@@ -132,12 +158,12 @@ export const transactionCategoryStyles = {
     borderColor: "border-[#0047AB]",
     backgroundColor: "bg-blue-500",
     textColor: "text-blue-700",
-    chipBackgroundColor: "bg-[#ECFDF3]",
+    chipBackgroundColor: "bg-blue-25",
   },
   default: {
-    borderColor: "",
+    borderColor: "border-blue-600",
     backgroundColor: "bg-blue-500",
     textColor: "text-blue-700",
-    chipBackgroundColor: "bg-inherit",
+    chipBackgroundColor: "bg-blue-25",
   },
 };

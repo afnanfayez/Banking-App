@@ -387,6 +387,11 @@ export const getBanks = async ({ userId }: getBanksProps) => {
   try {
     const { database } = await createAdminClient();
 
+    console.log("DEBUG: getBanks - DATABASE_ID:", DATABASE_ID);
+    console.log("DEBUG: getBanks - BANK_COLLECTION_ID:", BANK_COLLECTION_ID);
+    console.log("DEBUG: getBanks - userId:", userId);
+    console.log("DEBUG: getBanks - Endpoint:", process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT);
+
     let banks;
     let retries = 3;
     while (retries > 0) {
@@ -398,7 +403,9 @@ export const getBanks = async ({ userId }: getBanksProps) => {
         );
         break;
       } catch (error: any) {
-        console.error(`Error fetching banks(retry ${4 - retries}): `, error.message);
+        console.error(`DEBUG: Error fetching banks(retry ${4 - retries}): `, error.message);
+        if (error.cause) console.error(`DEBUG: Error Cause:`, error.cause);
+        console.error(`DEBUG: Full Error:`, error);
         retries--;
         if (retries === 0) throw error;
         await new Promise((resolve) => setTimeout(resolve, 1000));

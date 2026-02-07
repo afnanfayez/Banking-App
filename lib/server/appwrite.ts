@@ -2,6 +2,12 @@
 
 import { Client, Account, Databases, Users } from "node-appwrite";
 import { cookies } from "next/headers";
+import dns from "node:dns";
+
+// Fix for 'fetch failed' on dual-stack IPv4/IPv6 networks
+if (typeof dns.setDefaultResultOrder === 'function') {
+  dns.setDefaultResultOrder('ipv4first');
+}
 
 export async function createSessionClient() {
   const client = new Client()
