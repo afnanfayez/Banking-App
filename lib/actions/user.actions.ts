@@ -232,10 +232,13 @@ export async function getLoggedInUser() {
       DATABASE_ID!,
       USER_COLLECTION_ID!,
       [Query.equal("userId", authUser.$id)]
-    );
+    ).catch(err => {
+      console.error("APPWRITE_ERROR: Error listing documents in user collection. Check if 'userId' index exists:", err.message);
+      throw err;
+    });
 
     if (userDocs.documents.length === 0) {
-      console.error("No user document found for authenticated user");
+      console.error("No user document found for authenticated user in database collection");
       return null;
     }
 
@@ -248,8 +251,8 @@ export async function getLoggedInUser() {
     };
 
     return parseStringify(userData);
-  } catch (error) {
-    console.error("Error fetching logged in user:", error);
+  } catch (error: any) {
+    console.error("Error fetching logged in user:", error.message || error);
     return null;
   }
 }
