@@ -99,6 +99,7 @@ export const createTransfer = async ({
   amount,
 }: TransferParams) => {
   try {
+
     const requestBody = {
       _links: {
         source: {
@@ -113,11 +114,10 @@ export const createTransfer = async ({
         value: amount,
       },
     };
-    return await dwollaClient
-      .post("transfers", requestBody)
-      .then((res) => res.headers.get("location"));
-  } catch (err) {
-    console.error("Transfer fund failed: ", err);
+    const response = await dwollaClient.post("transfers", requestBody);
+    const location = response.headers.get("location");
+    return location;
+  } catch (err: any) {
   }
 };
 
@@ -137,8 +137,8 @@ export const addFundingSource = async ({
       plaidToken: processorToken,
       _links: dwollaAuthLinks,
     };
-    return await createFundingSource(fundingSourceOptions);
-  } catch (err) {
-    console.error("Transfer fund failed: ", err);
+    const url = await createFundingSource(fundingSourceOptions);
+    return url;
+  } catch (err: any) {
   }
 };

@@ -10,7 +10,7 @@ declare type SearchParamProps = {
 declare type SignUpParams = {
   firstName: string;
   lastName: string;
-  address1: string;
+  address: string;
   city: string;
   state: string;
   postalCode: string;
@@ -34,7 +34,7 @@ declare type User = {
   firstName: string;
   lastName: string;
   name: string;
-  address1: string;
+  address: string;
   city: string;
   state: string;
   postalCode: string;
@@ -194,8 +194,10 @@ declare interface AuthFormProps {
 
 declare interface BankDropdownProps {
   accounts: Account[];
-  setValue: UseFormSetValue<any>;
-  otherStyles: string;
+  setValue?: UseFormSetValue<any>;
+  otherStyles?: string;
+  onChange?: (value: string) => void;
+  value?: string;
 }
 
 declare interface BankTabItemProps {

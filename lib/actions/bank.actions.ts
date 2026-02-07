@@ -27,7 +27,15 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
         const accountsResponse = await plaidClient.accountsGet({
           access_token: bank.accessToken,
         });
-        const accountData = accountsResponse.data.accounts[0];
+
+        const accountData = accountsResponse.data.accounts.find(
+          (account: any) => account.account_id === bank.accountId
+        );
+
+        if (!accountData) {
+          console.warn(`PLAID_DEBUG: No matching account found for bank document ${bank.$id}`);
+          return null;
+        }
 
         // get institution info from plaid
         const institution = await getInstitution({
@@ -52,12 +60,14 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
       }) || [],
     );
 
-    const totalBanks = accounts.length;
-    const totalCurrentBalance = accounts.reduce((total, account) => {
+    const filteredAccounts = accounts.filter((account) => account !== null);
+
+    const totalBanks = filteredAccounts.length;
+    const totalCurrentBalance = filteredAccounts.reduce((total, account) => {
       return total + account.currentBalance;
     }, 0);
 
-    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+    return parseStringify({ data: filteredAccounts, totalBanks, totalCurrentBalance });
   } catch (error) {
     console.error("An error occurred while getting the accounts:", error);
     return null;
@@ -76,7 +86,12 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     const accountsResponse = await plaidClient.accountsGet({
       access_token: bank.accessToken,
     });
-    const accountData = accountsResponse.data.accounts[0];
+
+    const accountData = accountsResponse.data.accounts.find(
+      (account: any) => account.account_id === bank.accountId
+    );
+
+    if (!accountData) return null;
 
     // get transfer transactions from appwrite
     const transferTransactionsData = await getTransactionsByBankId({
@@ -117,9 +132,11 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
     };
 
     // sort transactions by date such that the most recent transaction is first
-    const allTransactions = [...transactions, ...transferTransactions].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-    );
+    const allTransactions = [...transactions, ...transferTransactions]
+      .filter((transaction) => transaction.accountId === accountData.account_id)
+      .sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+      );
 
     return parseStringify({
       data: account,
@@ -168,6 +185,7 @@ export const getTransactions = async ({
         cursor,
       });
 
+      console.log(`PLAID_DEBUG: Fetched ${response.data.added.length} transactions`);
       const data = response.data;
 
       const newTransactions = data.added.map((transaction) => ({
@@ -198,10 +216,14 @@ export const getTransactions = async ({
 
     return parseStringify(transactions);
   } catch (error: any) {
-    console.error(
-      "An error occurred while getting the transactions:",
-      error.message || error,
-    );
+    if (error?.response?.data?.error_code === 'PRODUCT_NOT_READY') {
+      console.log("Plaid transactions are still being synced. Please wait a moment...");
+    } else {
+      console.error(
+        "An error occurred while getting the transactions:",
+        error.response?.data?.error_message || error.message || error,
+      );
+    }
     return [];
   }
 };
