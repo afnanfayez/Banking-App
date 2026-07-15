@@ -21,18 +21,25 @@ const getEnvironment = (): "production" | "sandbox" => {
   }
 };
 
-const dwollaClient = new Client({
-  environment: getEnvironment(),
-  key: process.env.DWOLLA_KEY as string,
-  secret: process.env.DWOLLA_SECRET as string,
-});
+let dwollaClient: Client | null = null;
+
+const getDwollaClient = () => {
+  if (!dwollaClient) {
+    dwollaClient = new Client({
+      environment: getEnvironment(),
+      key: process.env.DWOLLA_KEY as string,
+      secret: process.env.DWOLLA_SECRET as string,
+    });
+  }
+  return dwollaClient;
+};
 
 // Create a Dwolla Funding Source using a Plaid Processor Token
 export const createFundingSource = async (
   options: CreateFundingSourceOptions,
 ) => {
   try {
-    return await dwollaClient
+    return await getDwollaClient()
       .post(`customers/${options.customerId}/funding-sources`, {
         name: options.fundingSourceName,
         plaidToken: options.plaidToken,
@@ -45,7 +52,7 @@ export const createFundingSource = async (
 
 export const createOnDemandAuthorization = async () => {
   try {
-    const onDemandAuthorization = await dwollaClient.post(
+    const onDemandAuthorization = await getDwollaClient().post(
       "on-demand-authorizations",
     );
     const authLink = onDemandAuthorization.body._links;
@@ -64,7 +71,7 @@ export const createDwollaCustomer = async (
       ssn: newCustomer.ssn ? "***" + newCustomer.ssn.slice(-4) : "missing",
     });
 
-    const response = await dwollaClient.post("customers", newCustomer);
+    const response = await getDwollaClient().post("customers", newCustomer);
     const location = response.headers.get("location");
 
     console.log("Dwolla API response status:", response.status);
@@ -118,7 +125,7 @@ export const createTransfer = async ({
         value: amount,
       },
     };
-    const response = await dwollaClient.post("transfers", requestBody);
+    const response = await getDwollaClient().post("transfers", requestBody);
     const location = response.headers.get("location");
     return location;
   } catch (err: any) {
