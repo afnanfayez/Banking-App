@@ -191,13 +191,25 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
+const US_STATE_CODES = [
+  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+  "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+  "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+  "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+  "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY",
+  "DC", "PR", "VI", "GU", "AS", "MP",
+];
+
 export const authFormSchema = (type: string) => z.object({
   // sign up
   firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   address: type === 'sign-in' ? z.string().optional() : z.string().max(50),
   city: type === 'sign-in' ? z.string().optional() : z.string().max(50),
-  state: type === 'sign-in' ? z.string().optional() : z.string().min(2).max(2),
+  state: type === 'sign-in' ? z.string().optional() : z.string().trim().toUpperCase().refine(
+    (v) => US_STATE_CODES.includes(v),
+    { message: "Enter a valid 2-letter state abbreviation (e.g. NY)" },
+  ),
   postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(5).max(5),
   dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(10).max(10),
   ssn: type === 'sign-in' ? z.string().optional() : z.string().min(4).max(4),
