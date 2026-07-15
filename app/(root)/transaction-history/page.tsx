@@ -4,11 +4,14 @@ import TransactionsTable from '@/components/ui/TransactionsTable';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
 import { formatAmount } from '@/lib/utils';
+import { redirect } from 'next/navigation';
 
 const TransactionHistory = async ({ searchParams }: SearchParamProps) => {
     const { id, page } = await searchParams;
     const currentPage = Number(page as string) || 1;
     const loggedIn = await getLoggedInUser();
+    if (!loggedIn) redirect('/sign-in');
+
     const accounts = await getAccounts({
         userId: loggedIn.$id
     })
